@@ -1,0 +1,11 @@
+SSSSSSSSSD
+S####SSSSS
+S#E ###SSS
+S# C  #SSS
+### # ##SS
+#X# #  #SS
+#XC  # #SS
+#X   C #SS
+########SS
+SSSSSSSSSS
+

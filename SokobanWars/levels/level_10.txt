@@ -1,0 +1,10 @@
+SSSSSSSSSD
+SS####SSSS
+SS#XX#SSSS
+S## X##SSS
+S#  CX#SSS
+## C  ##SS
+#  #CC #SS
+#  E   #SS
+##########
+SSSSSSSSSS
