@@ -38,7 +38,6 @@ void checkDisponibilidade(){
    }
    else{
     iteradorLista = i+1;
-    //printf("Consulta agendada na sala %d\n", iteradorLista);
     break;
   }
   }
@@ -73,7 +72,7 @@ pidFilho = wait(NULL);
 void signalHandler(int sinal){
   //Reader
   FILE *reader;
-  reader = fopen("PedidoConsultas.txt", "r"); 
+  reader = fopen("PedidoConsulta.txt", "r"); 
   fgets(descricaoCliente, 100, reader);
   fscanf(reader, "\n%d\n%d", &pidCliente, &tipoCliente);
   fclose(reader);
@@ -116,7 +115,7 @@ int main(){
   signal(SIGUSR1, signalHandler);
   signal(SIGINT ,treatSigint);
   printf("Servidor iniciado com sucesso\n");
-  char s[100];
+ 
   //S1
   for ( int i = 0; i < 10 ; i++){
       lista_consultas[i].tipo = -1;
@@ -127,11 +126,7 @@ int main(){
   
   //s3
   while(1) {
-    fgets(s, 100, stdin);
-    s[strlen(s)-1] = '\0';
-
-    if (strcmp(s, "sair") == 0 )
-      exit(0); 
+    pause();
   }
   
   

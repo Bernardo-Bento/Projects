@@ -52,6 +52,9 @@ public class OptionMenu extends User{
 		
 		
 	}
+	private void createNewUser(int number , int password) {
+		data.put(number, password);
+	}
 	private void goToSaving(){
 		System.out.println("You´re in your Saving account");
 		System.out.println("1. Check Balance");
@@ -113,8 +116,13 @@ public class OptionMenu extends User{
 	public void getLogin() {
 	    data.put(14102001, 1410);
 		data.put(27101973, 2710);
+		data.put(15081973, 1508);
 	
 	System.out.println("Welcome to Bento´s Bank");
+	System.out.println("1. Login");
+	System.out.println("2. Create new Account");
+	int selection = menuInput.nextInt();
+	
 	System.out.println("Please insert User Number:");
 	int userNumber = menuInput.nextInt();
 	int userPassword;
@@ -136,5 +144,7 @@ public class OptionMenu extends User{
 		
    }
 	tryAgain();
-	}
+	
+	
+}
 }

@@ -18,7 +18,7 @@ int canCreateNewConsulta = 1;
 
 int fileExists(){
  FILE *file;
-  if(access("PedidoConsultas.txt", F_OK) != -1){
+  if(access("PedidoConsulta.txt", F_OK) != -1){
      return 1;
   }
   return 0;
@@ -37,12 +37,12 @@ void writeConsultaInFile(){
      //perror("\nErro: Uma consulta encontra-se atualmente a decorrer.\n");
      printf("Erro: uma consulta ja se encontra a decorrer\n");
      printf("A tentar novamente daqui a 10 segundos\n");
-     remove("PedidoConsultas.txt");
+     remove("PedidoConsulta.txt");
      alarm(10);
    } 
    else{
       FILE *fileWrite;
-      fileWrite = fopen("PedidoConsultas.txt", "w");
+      fileWrite = fopen("PedidoConsulta.txt", "w");
       consulta.descricao[strcspn(consulta.descricao, "\n")] = 0;
       fprintf(fileWrite , "%s\n%d\n%d \n" ,consulta.descricao, consulta.pid_consulta, consulta.tipo);
       fclose(fileWrite);
@@ -56,7 +56,7 @@ void writeConsultaInFile(){
 
 void treatSIGUSR2(){
    printf("Consulta não é possivel para o processo %d\n", consulta.pid_consulta);
-   remove("PedidoConsultas.txt");
+   remove("PedidoConsulta.txt");
    exit(0);
 } 
 //C4
@@ -72,20 +72,20 @@ void treatSighup(){
 void treatSigterm(){
   if (sighupReceived == 1){
    printf("Consulta concluida para o processo %d\n", consulta.pid_consulta);
-   remove("PedidoConsultas.txt");
+   remove("PedidoConsulta.txt");
    sighupReceived = 0;
    exit(0);
  }
   else if ( sighupReceived == 0 ){
     printf("\nERROR: Ocorreu um erro com o inicio da consulta\n");
-    remove("PedidoConsultas.txt");
+    remove("PedidoConsulta.txt");
     exit(0);
   }
 }
 
 void treatSigint(){
   printf("\nO cliente cancelou o pedido!\n");
-  remove("PedidoConsultas.txt");
+  remove("PedidoConsulta.txt");
   exit(0);
 }
 void treatSigalarm(){
@@ -93,7 +93,7 @@ void treatSigalarm(){
   writeConsultaInFile();
   fileRead();
   printf("PID servidor: %d\n", pidServidor);
-  kill (pidServidor, SIGUSR1);
+  
 }
 
 int main (){
@@ -122,8 +122,6 @@ int main (){
    printf("adicione uma descricao: \n");
    fgets ( descricao , 20 , stdin );
    
-   
-    //C2
    consulta.tipo = tipo;
    strcpy(consulta.descricao, descricao);
    consulta.descricao[strcspn(consulta.descricao, "\n")] = 0;
@@ -134,19 +132,8 @@ int main (){
    printf("Ficheiro de pedidos de consultas atualizado \n");
    writeConsultaInFile();
    
-   
-   
-   
-
-
-
-   char s[100];
    while(1) {
-    fgets(s, 100, stdin);
-    s[strlen(s)-1] = '\0';
-
-    if (strcmp(s, "sair") == 0 )
-      exit(0); 
+    pause();
   }
    
    
