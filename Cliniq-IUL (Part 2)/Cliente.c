@@ -59,14 +59,14 @@ void treatSIGUSR2(){
    remove("PedidoConsulta.txt");
    exit(0);
 } 
-//C4
-//void sinalConsultaIniciada(int sinal){ 
- //printf("Consulta iniciada para o processo %d\n", consulta.pid_consulta);
-//}
+
 
 void treatSighup(){
   printf("Consulta iniciada para o processo %d\n", consulta.pid_consulta);
   sighupReceived = 1;
+  //remove("PedidoConsulta.txt");   //Decidi comentar o remove pois, se eu remover o ficheiro quando ele recebe o 
+                                    //sinal SIGHUP, nunca vou conseguir verificar se o ficheiro existe ou nao, e assim nao 
+                                    //conseguiria completar a alinea c8.
 }
 
 void treatSigterm(){

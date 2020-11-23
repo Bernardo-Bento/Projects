@@ -23,6 +23,14 @@ int pidCliente;
 char descricaoCliente[100];
 char infoCliente[200];
 
+int fileExists(){
+ FILE *file;
+  if(access("StatsConsultas.dat", F_OK) != -1){
+     return 1;
+  }
+  return 0;
+}
+
 void writePidInFile(){
   FILE *fileWrite;
   fileWrite = fopen("SrvConsultas.pid", "w");
@@ -97,16 +105,34 @@ void signalHandler(int sinal){
 }
 
 void updateFile(){
+  char aux1[100];
+  char aux2[100];
+  char aux3[100];
+  char auxPerdidas[100];
   FILE *writer;
+  FILE *reader;
+
+  reader = fopen("StatsConsultas.dat","r");
+  fscanf(reader, "tipo1: %s tipo2: %s tipo3: %s perdidas: %s", aux1, aux2, aux3, auxPerdidas);
+  fclose(reader);
   writer = fopen("StatsConsultas.dat" , "w");
-  fprintf(writer, "| tipo 1: %d | tipo 2: %d | tipo 3: %d | perdidas: %d |", counter1, counter2,counter3, countPerdidas);
+  fprintf(writer, "tipo1: %d tipo2: %d tipo3: %d perdidas: %d ", atoi(aux1) + counter1, atoi(aux2) + counter2, atoi(aux3) + counter3, atoi(auxPerdidas) + countPerdidas);
   fclose(writer);
+ 
 }
 
 void treatSigint(){
   remove("SrvConsultas.txt");
   printf("\nServidor Fechado com sucesso.\n");
+  if( fileExists() == 1 ){
   updateFile();
+  }
+  if (fileExists() == 0){
+    FILE *writer;
+    writer = fopen("StatsConsultas.dat" , "w");
+    fprintf(writer, "tipo1: %d tipo2: %d tipo3: %d perdidas: %d ", counter1,counter2,counter3, countPerdidas);
+    fclose(writer);
+  }
   exit(0);
 }
 
