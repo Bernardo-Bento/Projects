@@ -90,7 +90,6 @@ void signalHandler(int sinal){
   lista_consultas[iteradorLista].tipo = tipoCliente;
   strcpy(lista_consultas[iteradorLista].descricao,descricaoCliente);
   lista_consultas[iteradorLista].pid_consulta= pidCliente;
-  //printf("Consulta agendada na sala %d\n", iteradorLista);
   switch(tipoCliente){
     case 1: counter1++;
     break;
@@ -99,39 +98,54 @@ void signalHandler(int sinal){
     case 3: counter3++;
     break;
   }
-  printf("tipo 1: %d || tipo 2: %d || tipo 3: %d || perdidas: %d\n", counter1, counter2, counter3,countPerdidas);
+  printf("Stats deste processo: \nPerdidas: %d || tipo 1: %d || tipo 2: %d || tipo 3: %d\n", countPerdidas, counter1, counter2, counter3);
   processoFilho();
   
 }
 
 void updateFile(){
-  char aux1[100];
-  char aux2[100];
-  char aux3[100];
-  char auxPerdidas[100];
+  int contadores[4];
+  int aux[4];
   FILE *writer;
   FILE *reader;
-
   reader = fopen("StatsConsultas.dat","r");
-  fscanf(reader, "tipo1: %s tipo2: %s tipo3: %s perdidas: %s", aux1, aux2, aux3, auxPerdidas);
+  fread(aux, sizeof(aux),1,reader);
   fclose(reader);
+  contadores[0] = aux[0] + countPerdidas;
+  contadores[1] = aux[1] + counter1;
+  contadores[2] = aux [2] + counter2;
+  contadores[3] = aux [3] + counter3;
+  
   writer = fopen("StatsConsultas.dat" , "w");
-  fprintf(writer, "tipo1: %d tipo2: %d tipo3: %d perdidas: %d ", atoi(aux1) + counter1, atoi(aux2) + counter2, atoi(aux3) + counter3, atoi(auxPerdidas) + countPerdidas);
+  fwrite(contadores, sizeof(contadores),1,writer);
   fclose(writer);
+  printf("Stats Atualizadas:\n");
+  for (int i = 0; i < 4; i++){
+      printf("%d\n", contadores[i]);
+    }
  
 }
 
 void treatSigint(){
-  remove("SrvConsultas.txt");
+  remove("SrvConsultas.pid");
   printf("\nServidor Fechado com sucesso.\n");
   if( fileExists() == 1 ){
   updateFile();
   }
   if (fileExists() == 0){
+    int contadores[4];
+    contadores[0] = countPerdidas;
+    contadores[1] = counter1;
+    contadores[2] = counter2;
+    contadores[3] = counter3;
+  
     FILE *writer;
     writer = fopen("StatsConsultas.dat" , "w");
-    fprintf(writer, "tipo1: %d tipo2: %d tipo3: %d perdidas: %d ", counter1,counter2,counter3, countPerdidas);
+    fwrite(contadores, sizeof(contadores),1,writer);
     fclose(writer);
+    for (int i = 0; i < 4; i++){
+      printf("%d\n", contadores[i]);
+    }
   }
   exit(0);
 }
